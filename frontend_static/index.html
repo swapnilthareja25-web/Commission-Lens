@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CommissionLens</title>
+  <link rel="stylesheet" href="styles.css">
+  
+  <!-- React and ReactDOM -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  
+  <!-- Babel Standalone -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    function App() {
+      const [amcs, setAmcs] = useState([]);
+      const [formData, setFormData] = useState({
+        amc: '',
+        days_since_launch: 1500,
+        risk_90d: 2.5,
+        return_7d: 1.5,
+        return_30d: 4.0,
+        return_90d: 10.0
+      });
+      const [prediction, setPrediction] = useState(null);
+      const [loading, setLoading] = useState(false);
+      const [error, setError] = useState(null);
+
+      useEffect(() => {
+        fetch('/api/amcs')
+          .then(res => res.json())
+          .then(data => {
+            if (data.amcs && data.amcs.length > 0) {
+              setAmcs(data.amcs);
+              setFormData(prev => ({ ...prev, amc: data.amcs[0] }));
+            }
+          })
+          .catch(err => console.error("Failed to fetch AMCs:", err));
+      }, []);
+
+      const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+          ...prev,
+          [name]: name === 'amc' ? value : Number(value)
+        }));
+      };
+
+      const handlePredict = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError(null);
+        setPrediction(null);
+
+        try {
+          const response = await fetch('/api/predict', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+          });
+
+          if (!response.ok) {
+            throw new Error('Prediction request failed');
+          }
+
+          const data = await response.json();
+          setPrediction(data.predicted_drag);
+        } catch (err) {
+          setError(err.message);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      return (
+        <>
+          <div className="header">
+            <h1>CommissionLens</h1>
+            <p>Predict the expense ratio gap between Direct and Regular plans using AI</p>
+          </div>
+
+          <div className="brutalist-container">
+            <form onSubmit={handlePredict}>
+              <div className="grid-container">
+                <div>
+                  <label className="brutalist-label">Asset Management Company</label>
+                  <select 
+                    className="brutalist-input" 
+                    name="amc" 
+                    value={formData.amc} 
+                    onChange={handleInputChange}
+                    required
+                  >
+                    {amcs.map(amc => (
+                      <option key={amc} value={amc}>{amc}</option>
+                    ))}
+                  </select>
+
+                  <label className="brutalist-label">Days Since Launch</label>
+                  <input 
+                    type="number" 
+                    className="brutalist-input" 
+                    name="days_since_launch" 
+                    value={formData.days_since_launch} 
+                    onChange={handleInputChange}
+                    min="0"
+                    step="1"
+                    required
+                  />
+
+                  <label className="brutalist-label">90-Day Volatility (%)</label>
+                  <input 
+                    type="number" 
+                    className="brutalist-input" 
+                    name="risk_90d" 
+                    value={formData.risk_90d} 
+                    onChange={handleInputChange}
+                    step="0.1"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="brutalist-label">7-Day Momentum (%)</label>
+                  <input 
+                    type="number" 
+                    className="brutalist-input" 
+                    name="return_7d" 
+                    value={formData.return_7d} 
+                    onChange={handleInputChange}
+                    step="0.1"
+                    required
+                  />
+
+                  <label className="brutalist-label">30-Day Momentum (%)</label>
+                  <input 
+                    type="number" 
+                    className="brutalist-input" 
+                    name="return_30d" 
+                    value={formData.return_30d} 
+                    onChange={handleInputChange}
+                    step="0.1"
+                    required
+                  />
+
+                  <label className="brutalist-label">90-Day Momentum (%)</label>
+                  <input 
+                    type="number" 
+                    className="brutalist-input" 
+                    name="return_90d" 
+                    value={formData.return_90d} 
+                    onChange={handleInputChange}
+                    step="0.1"
+                    required
+                  />
+                </div>
+              </div>
+
+              <button type="submit" className="brutalist-button" disabled={loading}>
+                {loading ? 'Predicting...' : 'Predict Drag'}
+              </button>
+            </form>
+
+            {error && (
+              <div className="result-box" style={{ borderColor: 'var(--secondary)' }}>
+                <h3 style={{ color: 'var(--secondary)' }}>Error</h3>
+                <p>{error}</p>
+              </div>
+            )}
+
+            {prediction !== null && (
+              <div className="result-box">
+                <h3>{prediction.toFixed(3)}%</h3>
+                <p>Predicted Commission Drag</p>
+              </div>
+            )}
+          </div>
+        </>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>

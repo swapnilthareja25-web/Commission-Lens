@@ -1,0 +1,155 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;600;800&display=swap');
+
+:root {
+  --primary: #4CAF50;
+  --secondary: #ff4757;
+  --bg-color: #f1f2f6;
+  --text-color: #2f3542;
+  --border-color: #000;
+  --border-width: 4px;
+  --shadow-offset: 8px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-color);
+  background-image: url('/retro_bg.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  color: var(--text-color);
+  min-height: 100vh;
+  /* Make the background slightly faded or image very prominent */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Press Start 2P', monospace;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+  color: white;
+  text-shadow: 2px 2px 0 #000,
+               -1px -1px 0 #000,
+               1px -1px 0 #000,
+               -1px 1px 0 #000,
+               1px 1px 0 #000;
+}
+
+.brutalist-container {
+  background: white;
+  border: var(--border-width) solid var(--border-color);
+  box-shadow: var(--shadow-offset) var(--shadow-offset) 0px var(--border-color);
+  padding: 2rem;
+  margin: 2rem auto;
+  max-width: 800px;
+  border-radius: 0;
+}
+
+.brutalist-input {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  border: 3px solid var(--border-color);
+  box-shadow: 4px 4px 0px var(--border-color);
+  margin-bottom: 1.5rem;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.brutalist-input:focus {
+  outline: none;
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px var(--border-color);
+}
+
+.brutalist-label {
+  display: block;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.brutalist-button {
+  background-color: var(--primary);
+  color: white;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 1rem;
+  padding: 1rem 2rem;
+  border: 3px solid var(--border-color);
+  box-shadow: 6px 6px 0px var(--border-color);
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s;
+  text-transform: uppercase;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.brutalist-button:active {
+  transform: translate(6px, 6px);
+  box-shadow: 0px 0px 0px var(--border-color);
+}
+
+.result-box {
+  background: #f1f2f6;
+  border: 3px solid var(--border-color);
+  padding: 1.5rem;
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.result-box h3 {
+  color: var(--text-color);
+  text-shadow: none;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.result-box p {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.1rem;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 600px) {
+  .grid-container {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+}
+
+.header {
+  text-align: center;
+  padding: 4rem 1rem;
+}
+
+.header h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.header p {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: white;
+  text-shadow: 1px 1px 0 #000,
+               -1px -1px 0 #000,
+               1px -1px 0 #000,
+               -1px 1px 0 #000,
+               1px 1px 0 #000;
+  max-width: 600px;
+  margin: 0 auto;
+}
