@@ -73,4 +73,4 @@ def predict(request: PredictionRequest):
         return {"predicted_drag": float(prediction)}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-        app.mount("/", StaticFiles(directory=os.path.join(BASE_DIR, "frontend_static"), html=True), name="static")
+app.mount("/", StaticFiles(directory=os.path.join(BASE_DIR, "frontend_static"), html=True), name="static")
