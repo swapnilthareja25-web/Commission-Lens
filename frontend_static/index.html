@@ -52,32 +52,33 @@
         }));
       };
 
-      const handlePredict = async (e) => {
+            const handlePredict = (e) => {
         e.preventDefault();
         setLoading(true);
         setError(null);
         setPrediction(null);
 
-        try {
-          const response = await fetch('/api/predict', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-          });
-
+        fetch('/api/predict', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        })
+        .then(response => {
           if (!response.ok) {
             throw new Error('Prediction request failed');
           }
-
-          const data = await response.json();
+          return response.json();
+        })
+        .then(data => {
           setPrediction(data.predicted_drag);
-        } catch (err) {
-          setError(err.message);
-        } finally {
           setLoading(false);
-        }
+        })
+        .catch(err => {
+          setError(err.message);
+          setLoading(false);
+        });
       };
 
       return (
