@@ -1,3 +1,4 @@
+from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -72,3 +73,4 @@ def predict(request: PredictionRequest):
         return {"predicted_drag": float(prediction)}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+        app.mount("/", StaticFiles(directory=os.path.join(BASE_DIR, "frontend_static"), html=True), name="static")
