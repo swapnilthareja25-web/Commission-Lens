@@ -14,6 +14,12 @@
 </head>
 <body>
   <div id="root"></div>
+    <script>
+    window.addEventListener('error', e => {
+      document.getElementById('root').innerHTML =
+        '<pre style="color:red;white-space:pre-wrap;padding:1em;position:relative;z-index:999;background:white;">' + e.message + '\n' + (e.filename||'') + '</pre>';
+    });
+  </script>
 
  <script type="text/babel" data-presets="react">
     const { useState, useEffect } = React;
